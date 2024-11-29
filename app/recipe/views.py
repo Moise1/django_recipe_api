@@ -77,8 +77,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
         """Return the serializer class for request."""
         if self.action == 'list':
             return serializers.RecipeSerializer
-        # elif self.action == 'upload_image':
-        #     return serializers.RecipeImageSerializer
+        elif self.action == 'upload_image':
+            return serializers.RecipeImageSerializer
 
         return self.serializer_class
 
@@ -86,17 +86,17 @@ class RecipeViewSet(viewsets.ModelViewSet):
         """Create a new recipe."""
         serializer.save(user=self.request.user)
 
-#     @action(methods=['POST'], detail=True, url_path='upload-image')
-#     def upload_image(self, request, pk=None):
-#         """Upload an image to recipe."""
-#         recipe = self.get_object()
-#         serializer = self.get_serializer(recipe, data=request.data)
+    @action(methods=['POST'], detail=True, url_path='upload-image')
+    def upload_image(self, request, pk=None):
+        """Upload an image to recipe."""
+        recipe = self.get_object()
+        serializer = self.get_serializer(recipe, data=request.data)
 
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_200_OK)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # @extend_schema_view(
@@ -121,7 +121,7 @@ class BaseRecipeAttrViewSet(mixins.DestroyModelMixin,
     def get_queryset(self):
         """ Returns ingredients belonging to the authenticated userr """
         return self.queryset.filter(user=self.request.user).order_by('-name')
-        
+
     # def get_queryset(self):
     #     """Filter queryset to authenticated user."""
     #     assigned_only = bool(
